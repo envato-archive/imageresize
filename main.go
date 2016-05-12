@@ -27,12 +27,7 @@ func main() {
 	if *inPath != "-" {
 		parsedUrl, err := url.Parse(*inPath)
 		if err != nil {
-			f, err := os.Open(*inPath)
-			if err != nil {
-				log.Fatal(err)
-			}
-			input = f
-			defer f.Close()
+			log.Fatal(err)
 		} else {
 			switch parsedUrl.Scheme {
 			case "http", "https":
