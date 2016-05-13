@@ -36,6 +36,13 @@ func main() {
 					log.Fatal(err)
 				}
 				input = response.Body
+			case "file":
+				f, err := os.Open(parsedUrl.Path)
+				if err != nil {
+					log.Fatal(err)
+				}
+				input = f
+				defer f.Close()
 			case "":
 				f, err := os.Open(*inPath)
 				if err != nil {
