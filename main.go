@@ -11,6 +11,9 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
+	"regexp"
+	"runtime"
 
 	"github.com/nfnt/resize"
 )
@@ -25,19 +28,29 @@ func main() {
 
 	var input = io.Reader(os.Stdin)
 	if *inPath != "-" {
-		parsedUrl, err := url.Parse(*inPath)
+		parsedURL, err := url.Parse(*inPath)
 		if err != nil {
 			log.Fatal(err)
 		} else {
-			switch parsedUrl.Scheme {
+			switch parsedURL.Scheme {
 			case "http", "https":
-				response, err := http.Get(parsedUrl.String())
+				response, err := http.Get(parsedURL.String())
 				if err != nil {
 					log.Fatal(err)
 				}
 				input = response.Body
 			case "file":
-				f, err := os.Open(parsedUrl.Path)
+				inpath := filepath.FromSlash(filepath.Clean(parsedURL.Path))
+				if runtime.GOOS == "windows" {
+					// A file:/ URL on windows will usually look like file:/C:/foo/bar/baz.png
+					// The Path part of that URL ends up as /C:/foo/bar/baz.png
+					// This block strips off the leading slash
+					r, _ := regexp.Compile("\\\\[a-zA-Z]:\\\\")
+					if r.MatchString(inpath) {
+						inpath = inpath[1:len(inpath)]
+					}
+				}
+				f, err := os.Open(inpath)
 				if err != nil {
 					log.Fatal(err)
 				}
@@ -51,7 +64,7 @@ func main() {
 				input = f
 				defer f.Close()
 			default:
-				log.Fatalf("Unsupported URL scheme %s", parsedUrl.Scheme)
+				log.Fatalf("Unsupported URL scheme %s", parsedURL.Scheme)
 			}
 		}
 
