@@ -21,8 +21,9 @@ import (
 func main() {
 	inPath := flag.String("in", "-", "input file, url, or - for stdin")
 	outPath := flag.String("out", "-", "output file, or - for stdout")
+	method := flag.String("method", "nearest", "image resize method - 'nearest', 'bicubic', 'bilinear', 'mitchell', 'lanczos2', or 'lanzoc3'")
 	width := flag.Int("width", 0, "maximum width")
-	height := flag.Int("height", 0, "maximum height")
+  height := flag.Int("height", 0, "maximum height")
 
 	flag.Parse()
 
@@ -75,9 +76,17 @@ func main() {
 		log.Fatal(err)
 	}
 
+  methods := make(map[string]resize.InterpolationFunction)
+  methods["nearest"] = resize.NearestNeighbor
+  methods["bicubic"] = resize.Bicubic
+  methods["bilinear"] = resize.Bilinear
+  methods["mitchell"] = resize.MitchellNetravali
+  methods["lanczos2"] = resize.Lanczos2
+  methods["lanczos3"] = resize.Lanczos3
+
 	log.Printf("Resizing a %s to maximum %v x %v", format, *width, *height)
 
-	resized := resize.Thumbnail(uint(*width), uint(*height), img, resize.Bicubic)
+	resized := resize.Thumbnail(uint(*width), uint(*height), img, methods[*method])
 
 	var output = os.Stdout
 	if *outPath != "-" {
