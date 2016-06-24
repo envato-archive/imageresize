@@ -84,6 +84,10 @@ func main() {
 	interpolationFunctions["lanczos2"] = resize.Lanczos2
 	interpolationFunctions["lanczos3"] = resize.Lanczos3
 
+	if _, ok := interpolationFunctions[*interpolationFunction]; !ok {
+		log.Fatal("Invalid interpolation function provided.")
+	}
+
 	log.Printf("Resizing a %s to maximum %v x %v", format, *width, *height)
 
 	resized := resize.Thumbnail(uint(*width), uint(*height), img, interpolationFunctions[*interpolationFunction])
