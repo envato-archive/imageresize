@@ -19,12 +19,12 @@ import (
 )
 
 var interpolationFunctions = map[string]resize.InterpolationFunction{
-  "nearest": resize.NearestNeighbor,
-  "bicubic": resize.Bicubic,
-  "bilinear": resize.Bilinear,
-  "mitchell": resize.MitchellNetravali,
-  "lanczos2": resize.Lanczos2,
-  "lanczos3": resize.Lanczos3,
+	"nearest":  resize.NearestNeighbor,
+	"bicubic":  resize.Bicubic,
+	"bilinear": resize.Bilinear,
+	"mitchell": resize.MitchellNetravali,
+	"lanczos2": resize.Lanczos2,
+	"lanczos3": resize.Lanczos3,
 }
 
 func main() {
