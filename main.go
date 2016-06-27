@@ -18,21 +18,21 @@ import (
 	"github.com/nfnt/resize"
 )
 
+var interpolationFunctions = map[string]resize.InterpolationFunction{
+  "nearest": resize.NearestNeighbor,
+  "bicubic": resize.Bicubic,
+  "bilinear": resize.Bilinear,
+  "mitchell": resize.MitchellNetravali,
+  "lanczos2": resize.Lanczos2,
+  "lanczos3": resize.Lanczos3,
+}
+
 func main() {
 	inPath := flag.String("in", "-", "input file, url, or - for stdin")
 	outPath := flag.String("out", "-", "output file, or - for stdout")
 	interpolationFunction := flag.String("interpolation-function", "nearest", "interpolation function - 'nearest', 'bicubic', 'bilinear', 'mitchell', 'lanczos2', or 'lanzoc3'")
 	width := flag.Int("width", 0, "maximum width")
 	height := flag.Int("height", 0, "maximum height")
-
-  interpolationFunctions := map[string]resize.InterpolationFunction{
-    "nearest": resize.NearestNeighbor,
-    "bicubic": resize.Bicubic,
-    "bilinear": resize.Bilinear,
-    "mitchell": resize.MitchellNetravali,
-    "lanczos2": resize.Lanczos2,
-    "lanczos3": resize.Lanczos3,
-  }
 
 	flag.Parse()
 
