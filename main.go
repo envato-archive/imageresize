@@ -25,6 +25,15 @@ func main() {
 	width := flag.Int("width", 0, "maximum width")
 	height := flag.Int("height", 0, "maximum height")
 
+  interpolationFunctions := map[string]resize.InterpolationFunction{
+    "nearest": resize.NearestNeighbor,
+    "bicubic": resize.Bicubic,
+    "bilinear": resize.Bilinear,
+    "mitchell": resize.MitchellNetravali,
+    "lanczos2": resize.Lanczos2,
+    "lanczos3": resize.Lanczos3,
+  }
+
 	flag.Parse()
 
 	var input = io.Reader(os.Stdin)
@@ -75,14 +84,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	interpolationFunctions := make(map[string]resize.InterpolationFunction)
-	interpolationFunctions["nearest"] = resize.NearestNeighbor
-	interpolationFunctions["bicubic"] = resize.Bicubic
-	interpolationFunctions["bilinear"] = resize.Bilinear
-	interpolationFunctions["mitchell"] = resize.MitchellNetravali
-	interpolationFunctions["lanczos2"] = resize.Lanczos2
-	interpolationFunctions["lanczos3"] = resize.Lanczos3
 
 	if _, ok := interpolationFunctions[*interpolationFunction]; !ok {
 		log.Fatal("Invalid interpolation function provided.")
